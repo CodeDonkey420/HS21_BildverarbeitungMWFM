@@ -185,18 +185,17 @@ void lin_gwscale(int a1, int ak, unsigned char in[MAXXDIM][MAXYDIM], unsigned ch
   }
 }
 
-void balance_hist (int bucket_size, unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
+void balance_hist (int buckets, unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
   pixel_l *curr = (pixel_l*) malloc(sizeof(pixel_l));
 
   curr = get_gwordered_pixels(in);
 
   int bucket = 0;
-  int buckets = (int) (256 / bucket_size);
   int limit = (int) (256 * 256 / buckets);
   int count = 0;
 
   while (curr) {
-    out[curr->x][curr->y] = bucket * bucket_size;
+    out[curr->x][curr->y] = bucket * (256 / buckets);
 
     count++;
 

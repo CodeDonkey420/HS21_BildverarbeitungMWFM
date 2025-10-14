@@ -113,7 +113,10 @@ void main() {
 				break;
 
 			case flattenOpt:
-				balance_hist(10, image, out);
+				printf("Wie viele Buckets sollen entstehen");
+				scanf("%d", &count);
+				
+				balance_hist(count, image, out);
 				_result = writeImage_ppm(out, MAXXDIM, MAXYDIM);
 				break;
 
