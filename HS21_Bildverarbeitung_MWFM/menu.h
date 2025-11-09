@@ -15,6 +15,8 @@ enum MenuOpts {
   lineDiag,
   scaleHistOpt,
   flattenOpt,
+  laplace,
+  sovol,
 	
 } menuOpts;
 

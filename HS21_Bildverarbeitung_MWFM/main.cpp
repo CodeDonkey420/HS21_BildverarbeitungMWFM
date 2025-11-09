@@ -120,6 +120,38 @@ void main() {
 				_result = writeImage_ppm(out, MAXXDIM, MAXYDIM);
 				break;
 
+			case sovol:
+				_result = readImage_ppm(image); //Bild auswählen und in den Buffer laden
+
+				if (_result == 0) {
+					printf("Bild erfolgreich eingelesen.\n");
+					has_file = 1;
+				}
+
+				else {
+					printf("Fehler beim einlesen");
+				}
+
+				sovol_edges(image, out);
+				_result = writeImage_ppm(out, MAXXDIM, MAXYDIM);
+				break;
+
+			case laplace:
+				_result = readImage_ppm(image); //Bild auswählen und in den Buffer laden
+
+				if (_result == 0) {
+					printf("Bild erfolgreich eingelesen.\n");
+					has_file = 1;
+				}
+
+				else {
+					printf("Fehler beim einlesen");
+				}
+
+				laplace_edges(image, out);
+				_result = writeImage_ppm(out, MAXXDIM, MAXYDIM);
+				break;
+
 			default:
 				break;
 		}

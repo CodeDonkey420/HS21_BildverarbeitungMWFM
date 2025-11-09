@@ -209,3 +209,38 @@ void balance_hist (int buckets, unsigned char in[MAXXDIM][MAXYDIM], unsigned cha
     }
   }
 }
+
+void sovol_edges(unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+			out[x][y] = 0;
+		}
+	}
+
+	for (int x = 1; x < MAXXDIM -1; x++) {
+		for (int y = 1; y < MAXYDIM-1; y++) {
+			// x dir
+			int resx = in[x - 1][y - 1] + in[x - 1][y] * 2 + in[x - 1][y + 1] - in[x + 1][y - 1] - in[x + 1][y] * 2 - in[x + 1][y + 1];
+			int resy = in[x - 1][y - 1] + in[x][y - 1] * 2 + in[x + 1][y - 1] - in[x - 1][y + 1] - in[x][y + 1] * 2 - in[x + 1][y + 1];
+
+			out[x][y] = sqrt(resx*resx + resy * resy);
+		}
+	}
+}
+
+void laplace_edges(unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+			out[x][y] = 127;
+		}
+	}
+
+	for (int x = 1; x < MAXXDIM - 1; x++) {
+		for (int y = 1; y < MAXYDIM - 1; y++) {
+			// x dir
+			int res = in[x - 1][y] + in[x + 1][y] + in[x][y + 1] + in[x][y - 1] - 4 * in[x][y];
+
+			out[x][y] = (int) (res / 2.0 + 127);
+		}
+	}
+}

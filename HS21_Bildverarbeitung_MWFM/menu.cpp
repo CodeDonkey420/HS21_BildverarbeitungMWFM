@@ -16,6 +16,8 @@ int menu() {
 	printf("11. LineDiag\n");
 	printf("12. Lineare GW skalierung\n");
 	printf("13. Histogramm ebnen\n");
+	printf("14. Laplace\n");
+	printf("15. Sovol\n");
 	printf("0. Ende\n");
 	printf("Wahl : ");
 	scanf("%i", &i);
