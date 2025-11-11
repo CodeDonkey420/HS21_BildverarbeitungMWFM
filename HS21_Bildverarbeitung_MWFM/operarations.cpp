@@ -213,8 +213,8 @@ void balance_hist (int buckets, unsigned char in[MAXXDIM][MAXYDIM], unsigned cha
 void sovol_edges(unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
 	for (int x = 0; x < MAXXDIM; x++) {
 		for (int y = 0; y < MAXYDIM; y++) {
-			out[x][y] = 0;
-		}
+    out[x][y] = 0;
+  }
 	}
 
 	for (int x = 1; x < MAXXDIM -1; x++) {
@@ -243,4 +243,81 @@ void laplace_edges(unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM
 			out[x][y] = (int) (res / 2.0 + 127);
 		}
 	}
+}
+
+void cooc_matrix(unsigned char in[MAXXDIM][MAXYDIM], unsigned char out[MAXXDIM][MAXYDIM]) {
+  unsigned char l[MAXXDIM][MAXYDIM];
+  unsigned char r[MAXXDIM][MAXYDIM];
+  unsigned char o[MAXXDIM][MAXYDIM];
+  unsigned char u[MAXXDIM][MAXYDIM];
+
+  unsigned int sum[MAXXDIM][MAXYDIM];
+
+  reset_matrix(l);
+  reset_matrix(r);
+  reset_matrix(o);
+  reset_matrix(u);
+
+  for (int x = 0; x < MAXXDIM; x++) {
+    for (int y = 0; y < MAXYDIM; y++) {
+        int c = in[x][y];
+
+      if (x > 0) {
+        l[c][in[x-1][y]]++;
+      }
+
+      if (y > 0) {
+        o[c][in[x][y-1]]++;
+      }
+
+      if (x < MAXXDIM - 1) {
+        r[c][in[x+1][y]]++;
+      }
+
+      if (y < MAXYDIM -1) {
+        u[c][in[x][y+1]]++;
+      }
+		}
+	}
+
+  int max = 0;
+  int total = 0;
+
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+      sum[x][y] = l[x][y] + r[x][y] + o[x][y] + u[x][y];
+
+      if (max < sum[x][y]) {
+        max = sum[x][y];
+      }
+
+      total += sum[x][y];
+    }
+  }
+
+  double local_norm[MAXXDIM][MAXYDIM];
+  double norm[MAXXDIM][MAXYDIM];
+
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+      local_norm[x][y] = sum[x][y] / max;
+      norm[x][y] = sum[x][y] / total;
+    }
+  }
+
+  // output generieren
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+      out[x][y] = 256 - (int) local_norm[x][y] * 255;
+    }
+  }
+
+  double kontrast = 0;
+
+  // kontrast berechnen
+	for (int x = 0; x < MAXXDIM; x++) {
+		for (int y = 0; y < MAXYDIM; y++) {
+      kontrast += (x - y) * (x - y) * norm[x][y];
+    }
+  }
 }
